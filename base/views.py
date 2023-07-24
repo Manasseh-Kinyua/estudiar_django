@@ -4,8 +4,8 @@ from django.shortcuts import render
 
 def home(request):
     context = {}
-    return render(request, 'home.html', context)
+    return render(request, 'base/home.html', context)
 
 def rooms(request):
     context = {}
-    return render(request, 'rooms.html', context)
+    return render(request, 'base/rooms.html', context)
