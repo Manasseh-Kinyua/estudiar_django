@@ -2,6 +2,8 @@
 
 {% block content %}
 
-<h1>HOME PAGE</h1>
+{% for room in rooms %}
+<h1>{{room.id}} -- <a href="">{{room.name}}</a></h1>
+{% endfor %}
 
 {% endblock content %}
