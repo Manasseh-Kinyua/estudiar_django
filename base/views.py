@@ -75,7 +75,7 @@ def home(request):
         )
     topics = Topic.objects.all()
     room_count = rooms.count()
-    recent_activity = Message.objects.all()
+    recent_activity = Message.objects.filter(Q(room__topic__name__icontains=q))
 
     context = {
         'rooms': rooms,
@@ -106,6 +106,20 @@ def room(request, pk):
     }
     return render(request, 'base/room.html', context)
 
+def user_profile(request, pk):
+    user = User.objects.get(id=pk)
+    rooms = user.room_set.all()
+    recent_activity = user.message_set.all()
+    topics = Topic.objects.all()
+
+    context = {
+        "user": user,
+        "rooms": rooms,
+        "recent_activity": recent_activity,
+        "topics": topics,
+    }
+    return render(request, 'base/profile.html', context)
+
 @login_required(login_url='login')
 def create_room(request):
     form = RoomForm()
@@ -113,7 +127,9 @@ def create_room(request):
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False)
+            room.host=request.user
+            room.save()
             return redirect('home')
 
     context = {
