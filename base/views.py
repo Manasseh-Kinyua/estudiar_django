@@ -110,7 +110,7 @@ def user_profile(request, pk):
     user = User.objects.get(id=pk)
     rooms = user.room_set.all()
     recent_activity = user.message_set.all()
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
 
     context = {
         "user": user,
@@ -227,3 +227,7 @@ def topics(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     topics = Topic.objects.filter(name__icontains=q)
     return render(request, 'base/topics.html', {'topics': topics})
+
+def activity(request):
+    recent_activity = Message.objects.all()
+    return render(request, 'base/activity.html', {'recent_activity': recent_activity})
